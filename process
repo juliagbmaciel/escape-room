@@ -1,0 +1,357 @@
+from PyQt5 import uic
+from resource import *
+from PyQt5.QtWidgets import QApplication
+from PyQt5.QtGui import QMovie
+from PyQt5.QtCore import QTimer
+
+
+class Inicio:
+    def __init__(self):
+
+        app = QApplication([])
+        self.valida_perigo1 = True
+        self.valida_perigo2 = True
+
+        # Chave de ouro
+
+        self.chave_sair = False
+
+        # Tela inicial
+
+        self.inicio = uic.loadUi("qt\\trains-curse.ui")
+        movie_inicio = QMovie("qt/img-qt/inicio.gif")
+        self.inicio.lbl_inicio.setMovie(movie_inicio)
+        movie_inicio.start()
+        self.inicio.show()
+        self.comecar = self.inicio.btn_comeca
+        self.historia = self.inicio.btn_historia
+        self.sair = self.inicio.btn_sair
+        self.comecar.clicked.connect(self.gif1)
+        self.sair.clicked.connect(self.close)
+
+        # Tela gif inicial
+
+        self.gif1 = uic.loadUi("qt/inicio.ui")
+        movie_iniciogif = QMovie("qt/img-qt/gif1.gif")
+        self.gif1.lbl_gif1.setMovie(movie_iniciogif)
+        movie_iniciogif.start()
+
+        # Cabine1
+
+        self.cabine1 = uic.loadUi("qt\\cabine1.ui")
+
+        # Dica cabine1
+
+        self.dica_cabine1 = uic.loadUi("qt/cabine1_dica.ui")
+        movie_cabine = QMovie("qt/img-qt/cabine1_dica.gif")
+        self.dica_cabine1.lbl_cabine1_dica.setMovie(movie_cabine)
+        movie_cabine.start()
+
+        # Cozinha
+
+        self.cozinha = uic.loadUi("qt/cozinha.ui")
+
+        # Dica 1 cozinha
+
+        self.dica1_cozinha = uic.loadUi("qt/cozinha_dica1.ui")
+
+        # Input cozinha
+
+        self.input_cozinha = uic.loadUi("qt/cozinha_input.ui")
+
+        # Cozinha dica 2
+
+        self.cozinha_dica2 = uic.loadUi("qt/cozinha_dica2.ui")
+
+        # Corredor
+
+        self.corredor = uic.loadUi("qt/corredor.ui")
+
+        # Dica mochila
+
+        self.mochila = uic.loadUi("qt/corredor_bolsa.ui")
+        movie_mochila = QMovie("qt/img-qt/corredor_bolsa.gif")
+        self.mochila.lbl_gifbolsa.setMovie(movie_mochila)
+        movie_mochila.start()
+
+        # Chave
+
+        self.chave = uic.loadUi("qt/corredor_chave.ui")
+        movie_chave = QMovie("qt/img-qt/chave_gif.gif")
+        self.chave.lbl_gifchave.setMovie(movie_chave)
+        movie_chave.start()
+
+        # Quarto
+
+        self.quarto = uic.loadUi("qt/quarto.ui")
+
+        # Bilhete do quarto
+
+        self.bilhete_quarto = uic.loadUi("qt/quarto_bilhete.ui")
+
+        # Quarto xadrez
+
+        self.quarto_xadrez = uic.loadUi("qt/quarto_xadrez.ui")
+
+        # Quarto xadrez por dentro
+
+        self.quarto_xadrez_dentro = uic.loadUi("qt/quarto_dentro.ui")
+
+        # Quarto xadrez escolha a peça
+
+        self.xadrez = uic.loadUi("qt/xadrez.ui")
+
+        # Xeque mate tela
+
+        self.vence_xadrez = uic.loadUi("qt/xadrez_vence.ui")
+        movie_xadrez = QMovie("qt/img-qt/xadrez_vence.gif")
+        self.vence_xadrez.lbl_xadrez_vence.setMovie(movie_xadrez)
+        movie_xadrez.start()
+
+        # Primeiro perigo
+
+        self.perigo1 = uic.loadUi("qt/perigo_room.ui")
+
+        # Segundo perigo
+
+        self.perigo2 = uic.loadUi("qt/perigo_roomt.ui")
+
+        # Cabine saída
+
+        self.cabine2 = uic.loadUi("qt/cabine2.ui")
+
+        # Fecahdura final
+
+        self.fechadura = uic.loadUi("qt/cabine2_fechadura.ui")
+
+        # Banheiro
+
+        self.banheiro = uic.loadUi("qt/banheiro.ui")
+
+        # End
+
+        self.end = uic.loadUi("qt/end.ui")
+        movie_end = QMovie("qt/img-qt/end.gif")
+        self.end.lbl_end.setMovie(movie_end)
+        movie_end.start()
+
+        #
+
+        app.exec_()
+
+    def close(self):
+        self.inicio.close()
+
+    def gif1(self):
+        self.inicio.close()
+        self.gif1.show()
+        timer = QTimer()
+        timer.singleShot(1000, lambda: self.abre_cabine1(parametro="gif1"))
+
+    def abre_cabine1(self, parametro):
+        if self.valida_perigo1:
+            if parametro == "perigo1":
+                self.perigo1.close()
+            else:
+                self.valida_fechar_tela(parametro)
+            self.cabine1.show()
+            self.cabine1.btn_dica_cabine1.clicked.connect(self.abre_dica_cabine1)
+            self.cabine1.btn_cozinha.clicked.connect(lambda: self.abre_cozinha(parametro="cabine1"))
+
+    def abre_dica_cabine1(self):
+        self.cabine1.close()
+        self.dica_cabine1.show()
+        self.dica_cabine1.btn_cozinha.clicked.connect(lambda: self.abre_cozinha(parametro="dica_cabine1"))
+        self.dica_cabine1.btn_guarda_bilhete.clicked.connect(lambda: self.abre_cabine1(parametro="dica_cabine1"))
+
+    def abre_cozinha(self, parametro):
+        self.valida_fechar_tela(parametro)
+        self.cozinha.btn_cabine1.clicked.connect(lambda: self.abre_cabine1(parametro="cozinha"))
+        self.cozinha.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="cozinha"))
+        self.cozinha.btn_dica2.clicked.connect(self.abre_dica1_cozinha)
+        self.cozinha.show()
+
+    def abre_dica1_cozinha(self):
+        self.cozinha.close()
+        self.dica1_cozinha.show()
+        self.dica1_cozinha.btn_guarda_relogio.clicked.connect(lambda: self.abre_cozinha(parametro="dica1_cozinha"))
+        self.dica1_cozinha.btn_conserta.clicked.connect(self.abre_input_cozinha)
+        self.dica1_cozinha.btn_cabine1.clicked.connect(lambda: self.abre_cabine1(parametro="dica1_cozinha"))
+        self.dica1_cozinha.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="dica1_cozinha"))
+
+    def abre_input_cozinha(self):
+        self.dica1_cozinha.close()
+        self.input_cozinha.show()
+        self.input_cozinha.btn_cabine1.clicked.connect(lambda: self.abre_cabine1(parametro="input_cozinha"))
+        self.input_cozinha.btn_nsei.clicked.connect(lambda: self.abre_cozinha(parametro="input_cozinha"))
+        self.input_cozinha.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="input_cozinha"))
+        self.input_cozinha.btn_tentar.clicked.connect(self.valida_senha_input)
+
+    def valida_senha_input(self):
+        texto = self.input_cozinha.input_senha1.text()
+        if texto == "tictac":
+            self.input_cozinha.close()
+            self.cozinha_dica2.show()
+            self.cozinha_dica2.btn_cabine1.clicked.connect(lambda: self.abre_cabine1(parametro="cozinha_dica2"))
+            self.cozinha_dica2.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="cozinha_dica2"))
+        else:
+            self.input_cozinha.input_senha1.clear()
+
+    def abre_corredor(self, parametro):
+        self.valida_fechar_tela(parametro)
+        self.corredor.show()
+        self.corredor.btn_mochila.clicked.connect(self.abre_dica_mochila)
+        self.corredor.btn_cozinha.clicked.connect(lambda: self.abre_cozinha(parametro="corredor"))
+        self.corredor.btn_quarto.clicked.connect(lambda: self.abre_quarto(parametro="corredor"))
+
+    def abre_dica_mochila(self):
+        self.corredor.close()
+        self.mochila.show()
+        self.mochila.btn_guardabolsa.clicked.connect(lambda: self.abre_corredor(parametro="mochila"))
+        self.mochila.btn_cozinha.clicked.connect(lambda: self.abre_cozinha(parametro="mochila"))
+        self.mochila.btn_quarto.clicked.connect(lambda: self.abre_quarto(parametro="mochila"))
+        self.mochila.btn_tentar.clicked.connect(self.valida_mochila)
+
+    def valida_mochila(self):
+        texto = self.mochila.input_bolsa.text()
+        if texto == '31':
+            self.mochila.close()
+            self.chave.show()
+            self.chave.btn_cozinha.clicked.connect(lambda: self.abre_cozinha(parametro="chave"))
+            self.chave.btn_quarto.clicked.connect(lambda: self.abre_quarto(parametro="chave"))
+            self.chave.btn_guardachave.clicked.connect(self.pega_chave)
+        else:
+            self.mochila.input_bolsa.clear()
+
+    def pega_chave(self):
+        self.chave_sair = True
+        self.abre_corredor('chave')
+
+    def abre_quarto(self, parametro):
+        self.valida_fechar_tela(parametro)
+        self.quarto.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro='quarto'))
+        self.quarto.btn_bilhetequarto.clicked.connect(lambda: self.abre_quarto_bilhete(parametro='quarto'))
+        self.quarto.btn_quartoxadrez.clicked.connect(lambda: self.abre_quarto_xadrez(parametro='quarto'))
+        self.quarto.show()
+
+    def abre_quarto_bilhete(self, parametro):
+        self.valida_fechar_tela(parametro)
+        self.bilhete_quarto.show()
+        self.bilhete_quarto.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="bilhete_quarto"))
+        self.bilhete_quarto.btn_guardabilheteq.clicked.connect(lambda: self.abre_quarto(parametro="bilhete_quarto"))
+        self.bilhete_quarto.btn_quartoxadrez.clicked.connect(lambda: self.abre_quarto_xadrez(parametro="bilhete_quarto"))
+
+    def abre_quarto_xadrez(self, parametro):
+        self.valida_fechar_tela(parametro)
+        self.quarto_xadrez.show()
+        self.quarto_xadrez.btn_quarto.clicked.connect(lambda: self.abre_quarto(parametro="quarto_xadrez"))
+        self.quarto_xadrez.btn_quartodentro.clicked.connect(lambda: self.abre_quarto_dentro(parametro="quarto_xadrez"))
+        self.quarto_xadrez.btn_perigo1.clicked.connect(lambda: self.abre_perigo1(parametro="quarto_xadrez"))
+
+    def abre_quarto_dentro(self, parametro):
+        self.valida_fechar_tela(parametro)
+        self.quarto_xadrez_dentro.show()
+        self.quarto_xadrez_dentro.btn_quartoxadrez.clicked.connect(lambda: self.abre_quarto_xadrez(parametro="xadrez_dentro"))
+        self.quarto_xadrez_dentro.btn_jogoxadrez.clicked.connect(self.abre_xadrez)
+
+    def abre_xadrez(self):
+        self.quarto_xadrez_dentro.close()
+        self.xadrez.show()
+        self.xadrez.btn_vencexadrez.clicked.connect(self.abre_vence_xadrez)
+
+    def abre_vence_xadrez(self):
+        self.xadrez.close()
+        self.vence_xadrez.show()
+        self.vence_xadrez.btn_quartoxadrez.clicked.connect(lambda: self.abre_quarto_xadrez(parametro="vence_xadrez"))
+
+    def abre_perigo1(self, parametro):
+        self.valida_perigo1 = True
+        self.valida_fechar_tela(parametro)
+        self.perigo1.show()
+        self.perigo1.btn_perigo2.clicked.connect(lambda: self.abre_perigo2(parametro="perigo1"))
+        self.perigo1.btn_quartoxadrez.clicked.connect(lambda: self.abre_quarto_xadrez(parametro="perigo1"))
+        timer = QTimer()
+        timer.singleShot(3000, lambda: self.abre_cabine1(parametro="perigo1"))
+
+    def abre_perigo2(self, parametro):
+        self.valida_perigo2 = True
+        self.valida_fechar_tela(parametro)
+        self.perigo2.show()
+        timer = QTimer()
+        timer.singleShot(3000, lambda: self.abre_cabine2(parametro="perigo2"))
+        self.perigo2.btn_banheiro.clicked.connect(self.abre_banheiro)
+        self.perigo2.btn_perigo_room.clicked.connect(lambda: self.abre_perigo1(parametro="perigo2"))
+
+    def abre_cabine2(self, parametro):
+        self.valida_perigo1 = True
+        if self.valida_perigo2:
+            self.valida_fechar_tela(parametro)
+            self.cabine2.show()
+            self.cabine2.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="cabine2"))
+            self.cabine2.btn_fechadura.clicked.connect(self.abre_fechadura)
+
+    def abre_fechadura(self):
+        self.cabine2.close()
+        self.fechadura.show()
+        self.fechadura.btn_voltar.clicked.connect(lambda: self.abre_cabine2(parametro="fechadura"))
+        self.fechadura.btn_corredor.clicked.connect(lambda: self.abre_corredor(parametro="fechadura"))
+        self.fechadura.btn_inserirchave.clicked.connect(self.vence_ou_nao)
+
+    def abre_banheiro(self):
+        self.valida_perigo2 = False
+        self.perigo2.close()
+        self.banheiro.show()
+
+    def vence_ou_nao(self):
+        print(self.chave_sair)
+        if self.chave_sair:
+            self.fechadura.close()
+            self.end.show()
+
+    def valida_fechar_tela(self, parametro):
+        if parametro == "dica_cabine1":
+            self.dica_cabine1.close()
+        elif parametro == "cabine1":
+            self.cabine1.close()
+        elif parametro == "dica1_cozinha":
+            self.dica1_cozinha.close()
+        elif parametro == "input_cozinha":
+            self.input_cozinha.close()
+        elif parametro == "corredor":
+            self.corredor.close()
+        elif parametro == "mochila":
+            self.mochila.close()
+        elif parametro == "chave":
+            self.chave.close()
+        elif parametro == "cozinha_dica2":
+            self.cozinha_dica2.close()
+        elif parametro == "cozinha":
+            self.cozinha.close()
+        elif parametro == "chave":
+            self.chave.close()
+        elif parametro == 'gif1':
+            self.gif1.close()
+        elif parametro == 'quarto':
+            self.quarto.close()
+        elif parametro == 'bilhete_quarto':
+            self.bilhete_quarto.close()
+        elif parametro == 'quarto_xadrez':
+            self.quarto_xadrez.close()
+        elif parametro == 'xadrez_dentro':
+            self.quarto_xadrez_dentro.close()
+        elif parametro == 'vence_xadrez':
+            self.vence_xadrez.close()
+        elif parametro == 'perigo1':
+            self.valida_perigo1 = False
+            self.perigo1.close()
+        elif parametro == 'cabine2':
+            self.cabine2.close()
+        elif parametro == 'perigo2':
+            self.valida_perigo2 = False
+            self.perigo2.close()
+        elif parametro == 'fechadura':
+            self.fechadura.close()
+
+
+if __name__ == '__main__':
+    inicio = Inicio()
